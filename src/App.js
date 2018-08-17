@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import Posts from './components/Posts'
 import AddPost from './components/AddPost'
-import Image from './components/Image'
+import Camera from './components/Camera'
 
 class App extends Component {
   render() {
@@ -13,7 +13,7 @@ class App extends Component {
         <div className="App">
           <AddPost />
           <br />
-          <Image />
+          <Camera />
           <br/>
           <Posts />
         </div>
