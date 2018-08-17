@@ -14,17 +14,17 @@ export const init = (video, cameraId, callback) => {
     if (cameras.length > 0) {
       cameras.forEach(camera => {
         if (camera.id === cameraId) {
-          scanner.start(camera)
+          return scanner.start(camera)
         }
       })        
     } else {
-      console.log('No cameras found')
+      return console.log('No cameras found')
     }
   }).catch(err => console.log(err))
 }
 
 export const stop = () => {
   return new Promise((resolve, reject) => {
-    scanner.stop().then(resolve()).catch(err => reject(err))
+    scanner.stop().then(() => resolve()).catch(err => reject(err))
   })
 }

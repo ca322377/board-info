@@ -1,11 +1,11 @@
 import * as instascan from './instascan'
 var video, videoSelect, callback
 
-export const init = (video, videoSelectz, callback) => {
+export const init = (mVideo, mVideoSelect, mCallback) => {
   if (navigator.mediaDevices.enumerateDevices && navigator.mediaDevices.getUserMedia) {
-    video = this.video
-    this.videoSelect = videoSelect
-    callback = this.callback
+    video = mVideo
+    videoSelect = mVideoSelect
+    callback = mCallback
 
     navigator.mediaDevices.enumerateDevices()
       .then(gotDevices)
@@ -29,12 +29,12 @@ const getStream= () => {
   navigator.mediaDevices.getUserMedia({
     video: { deviceId: { exact: videoSelect.value } }
   }).then(stream => {
-    videoSelect.srcObject = stream
+    video.srcObject = stream
     instascan.init(video, videoSelect.value, callback)
   }).catch(err => console.log(err))
 }
 
-export const handleSelect = (e) => {
+export const handleSelect = () => {
   if (video.srcObject) {
     instascan.stop().then(() => {
       video.srcObject.getTracks().forEach(t => t.stop())

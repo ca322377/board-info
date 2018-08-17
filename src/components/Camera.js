@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import * as cameraHandler from '../logic/cameraHandler'
+import * as cameraHandler from '../helper/cameraHandler'
 
 export default class Camera extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ export default class Camera extends Component {
         <br />
         <div>
           {this.state.qrValue}
-          <select ref={this.videoSelect} onChange={cameraHandler.handleSelect}></select>
+          <select ref={this.videoSelect} onChange={() => cameraHandler.handleSelect()}></select>
         </div>
       </div>
     )
