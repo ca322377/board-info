@@ -1,66 +1,89 @@
 import React, { Component } from 'react'
-import Instascan from 'instascan'
+import instascan from 'instascan'
+var scanner
 
 export default class Image extends Component {
   constructor(props) {
     super(props)
     this.video = React.createRef()
-    this.select = React.createRef()
-    this.gotDevices = this.gotDevices.bind(this)
-    this.getStream = this.getStream.bind(this)
+    this.videoSelect = React.createRef()
     this.state = {
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/220px-QR_code_for_mobile_English_Wikipedia.svg.png',
       qrValue: ''
     }
+    this.initInstascan = this.initInstascan.bind(this)
   }
 
-  handleClick(e) {
+  componentDidMount() {
+    this.init()
+  }
+
+  init() {
     if (navigator.mediaDevices.enumerateDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.enumerateDevices().then(devices => (
-        devices.forEach(device => {
-          if (device.kind === 'videoinput') {
-            let option = document.createElement('option')
-            option.value = device.deviceId
-            option.text = device.label
-            this.select.current.appendChild(option)
-          }
-        })
-      )).then(() => {
-        console.log(this.select.current.value)
-        navigator.mediaDevices.getUserMedia({
-          video: {deviceId: {exact: this.select.current.value}}
-        }).then(stream => {
-          this.video.current = stream
-          console.log(this.video.current)
-        })
-      })
-      .catch(err => (
-        console.log(err)
-      ))
+      navigator.mediaDevices.enumerateDevices()
+        .then(this.gotDevices.bind(this))
+        .then(this.getStream.bind(this))
+        .catch(err => console.log(err))
     }
-  }
-
-  initInstascan() {
-
   }
 
   gotDevices(devices) {
-    devices.forEach(device => {
+    const videoSelect = this.videoSelect.current
+
+    return devices.forEach(device => {
       if (device.kind === 'videoinput') {
-        let option = document.createElement('option')
+        const option = document.createElement('option')
         option.value = device.deviceId
-        option.text = device.label
-        this.select.current.appendChild(option)
+        option.text = device.label || 'camera ' + videoSelect.length + 1
+        videoSelect.appendChild(option)
       }
     })
   }
 
   getStream() {
+    const videoSelect = this.videoSelect.current
+    const video = this.video.current
+
     navigator.mediaDevices.getUserMedia({
-      video: {deviceId: {exact: this.select.current}}
-    }).then(stream => (
-      this.video.current = stream
-    ))
+      video: { deviceId: { exact: videoSelect.value } }
+    }).then(stream => {
+      video.srcObject = stream
+      this.initInstascan()
+    }).catch(err => console.log(err))
+  }
+
+  handleSelect(e) {
+    const video = this.video.current
+
+    if (video.srcObject) {
+      scanner.stop().then(() => {
+        video.srcObject.getTracks().forEach(t => t.stop())
+        this.getStream()
+      })
+    }
+  }
+
+  initInstascan() {
+    scanner = new instascan.Scanner({
+      video: this.video.current,
+      backgroundScan: false,
+      mirror: false
+    })
+
+    scanner.addListener('scan', content => {
+      console.log(content)
+    })
+    
+    instascan.Camera.getCameras().then(cameras => {
+      if (cameras.length > 0) {
+        cameras.forEach(camera => {
+          if (camera.id === this.videoSelect.current.value) {
+            scanner.start(camera)
+          }
+        })        
+      } else {
+        console.log('No cameras found')
+      }
+    }).catch(err => console.log(err))
   }
 
   render() {
@@ -68,11 +91,9 @@ export default class Image extends Component {
       <div>
         <video autoPlay='true' ref={this.video}></video>
         <br />
-        <button onClick={this.handleClick.bind(this)}>Read QR Code</button>
-        <br />
         <div>
           {this.state.qrValue}
-          <select ref={this.select}></select>
+          <select ref={this.videoSelect} onChange={this.handleSelect.bind(this)}></select>
         </div>
       </div>
     )
