@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import postReducer from './postReducer'
+import queryReducer from './queryReducer'
 
 export default combineReducers({
-  posts: postReducer
+  slope: queryReducer
 })

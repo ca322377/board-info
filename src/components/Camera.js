@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import * as cameraHandler from '../helper/cameraHandler'
+import { connect } from 'react-redux'
+import { getDoc } from '../actions/queryActions'
 
-export default class Camera extends Component {
+class Camera extends Component {
   constructor(props) {
     super(props)
     this.video = React.createRef()
@@ -15,12 +18,12 @@ export default class Camera extends Component {
     cameraHandler.init(
       this.video.current,
       this.videoSelect.current,
-      this.onQrFound
+      this.handleQrContent.bind(this)
     )
   }
 
-  onQrFound(content) {
-    console.log(content)
+  handleQrContent(content) {
+    this.props.getDoc(content)
   }
 
   render() {
@@ -36,3 +39,9 @@ export default class Camera extends Component {
     )
   }
 }
+
+Camera.propTypes = {
+  getDoc: PropTypes.func.isRequired
+}
+
+export default connect(null, { getDoc })(Camera)
