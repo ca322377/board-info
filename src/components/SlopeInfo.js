@@ -3,6 +3,16 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 class SlopeInfo extends Component {
+  state = {
+    isInfoShown: false
+  }
+
+  componentWillReceiveProps(nextProp) {
+    if (nextProp.slopeData) {
+      this.setState({ isInfoShown: true })
+    }
+  }
+
   formatDate = (date) => {
     var month = '' + (date.getMonth() + 1),
       day = '' + date.getDate(),
@@ -21,19 +31,49 @@ class SlopeInfo extends Component {
     const lat = ((slopeData || {}).location || {})._lat
     const long = ((slopeData || {}).location || {})._long
 
-    return (
+    const styles = {
+      list: {
+        listStyle: 'none',
+        textAlign: 'left',
+        display: 'inline-block'
+      },
+      leftPad: {
+        padding: 0        
+      },
+      rightPad: {
+        padding: '0 0 0 10px'
+      },
+      container: {
+        width: '100%',
+        textAlign: 'center'
+      }
+    }
+
+    return this.state.isInfoShown ? (
       <div>
-        <h1>Slope</h1>
-        <div>{this.props.slopeId}</div>
-        <br/>
-        <div>Latitude: {lat}</div>
-        <div>Longitude: {long}</div>
-        <div>Road: {slopeData.road}</div>
-        <div>Date: {date}</div>
-        <div>Angle: {slopeData.angle}</div>
-        <div>Height: {slopeData.height}</div>
+        <h3 style={styles.container}>Slope Info</h3>
+        <div style={styles.container}>
+          <ul style={Object.assign(styles.list, styles.leftPad)}>
+            <li>Slope ID:</li>
+            <li>Latitude:</li>
+            <li>Longitude:</li>
+            <li>Road:</li>
+            <li>Date:</li>
+            <li>Angle:</li>
+            <li>Height:</li>
+          </ul>
+          <ul style={Object.assign(styles.list, styles.rightPad)}>
+            <li>{this.props.slopeId}</li>
+            <li>{lat}</li>
+            <li>{long}</li>
+            <li>{slopeData.road}</li>
+            <li>{date}</li>
+            <li>{slopeData.angle}</li>
+            <li>{slopeData.height}</li>
+          </ul>
+        </div>
       </div>
-    )
+    ) : null
   }
 }
 

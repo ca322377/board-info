@@ -27,16 +27,37 @@ class Camera extends Component {
   }
 
   render() {
+    const container = {
+      position: 'relative',
+      paddingTop: '100%',
+      overflow: 'hidden'
+    }
+
+    const video = {
+      position: 'absolute',
+      width: '100%',
+      top: 0,
+      left: 0
+    }
+
+    const select = {
+      display: 'block',
+      margin: '0 auto'
+    }
+
     return (
+
       <div>
-        <div style={{ position: 'relative', paddingTop: '100%', overflow: 'hidden' }}>
-          <video autoPlay ref={this.video}
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%' }}></video>
+        <div style={container}>
+          <video autoPlay ref={this.video} style={video}></video>
         </div>
         <br />
         <div>
           {this.state.qrValue}
-          <select ref={this.videoSelect} onChange={() => cameraHandler.handleSelect()}></select>
+          <select ref={this.videoSelect}
+            onChange={() => cameraHandler.handleSelect()}
+            style={select}>
+          </select>
         </div>
       </div>
     )
