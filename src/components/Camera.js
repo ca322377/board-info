@@ -29,7 +29,10 @@ class Camera extends Component {
   render() {
     return (
       <div>
-        <video autoPlay='true' ref={this.video}></video>
+        <div style={{ position: 'relative', paddingTop: '100%', overflow: 'hidden' }}>
+          <video autoPlay ref={this.video}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%' }}></video>
+        </div>
         <br />
         <div>
           {this.state.qrValue}
