@@ -3,15 +3,19 @@ import PropTypes from 'prop-types'
 import * as cameraHandler from '../helper/cameraHandler'
 import { connect } from 'react-redux'
 import { getDoc } from '../actions/queryActions'
+import { showLoader } from '../actions/loadActions'
+import '../css/Camera.css'
+
+const Div = (props) => {
+  return props.loading ?
+    <div className={props.class}></div> : null
+}
 
 class Camera extends Component {
   constructor(props) {
     super(props)
     this.video = React.createRef()
     this.videoSelect = React.createRef()
-    this.state = {
-      qrValue: ''
-    }
   }
 
   componentDidMount() {
@@ -27,36 +31,18 @@ class Camera extends Component {
   }
 
   render() {
-    const container = {
-      position: 'relative',
-      paddingTop: '100%',
-      overflow: 'hidden'
-    }
-
-    const video = {
-      position: 'absolute',
-      width: '100%',
-      top: 0,
-      left: 0
-    }
-
-    const select = {
-      display: 'block',
-      margin: '0 auto'
-    }
-
     return (
-
       <div>
-        <div style={container}>
-          <video autoPlay ref={this.video} style={video}></video>
+        <div className='container'>
+          <Div loading={this.props.loading} class='cover'/>
+          <Div loading={this.props.loading} class='loader'/>
+          <video className='video' autoPlay ref={this.video}></video>
         </div>
+
         <br />
         <div>
-          {this.state.qrValue}
-          <select ref={this.videoSelect}
-            onChange={() => cameraHandler.handleSelect()}
-            style={select}>
+          <select className='select' ref={this.videoSelect}
+            onChange={() => cameraHandler.handleSelect()}>
           </select>
         </div>
       </div>
@@ -65,7 +51,12 @@ class Camera extends Component {
 }
 
 Camera.propTypes = {
-  getDoc: PropTypes.func.isRequired
+  getDoc: PropTypes.func.isRequired,
+  showLoader: PropTypes.func.isRequired
 }
 
-export default connect(null, { getDoc })(Camera)
+const mapStateToProps = state => ({
+  loading: state.loader.loading
+})
+
+export default connect(mapStateToProps, { getDoc, showLoader })(Camera)

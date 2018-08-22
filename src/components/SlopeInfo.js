@@ -3,25 +3,41 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 class SlopeInfo extends Component {
-  state = {
-    isInfoShown: false
+  constructor(props) {
+    super(props)
+    this.info = React.createRef()
+    this.state = {
+      isInfoShown: false
+    }
   }
 
   componentWillReceiveProps(nextProp) {
-    if (nextProp.slopeData) {
-      this.setState({ isInfoShown: true })
+    if (nextProp.slopeId || nextProp.slopeData) {
+      this.setState({ isInfoShown: true }, () => {
+        this.scrollToTarget(this.info.current)
+      })
     }
+  }
+
+  scrollToTarget(target) {
+    setTimeout(() => {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      })
+    }, 500)
   }
 
   formatDate = (date) => {
     var month = '' + (date.getMonth() + 1),
       day = '' + date.getDate(),
-      year = date.getFullYear();
+      year = date.getFullYear()
 
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
+    if (month.length < 2) month = '0' + month
+    if (day.length < 2) day = '0' + day
 
-    return [year, month, day].join('-');
+    return [year, month, day].join('-')
   }
 
   render() {
@@ -38,7 +54,7 @@ class SlopeInfo extends Component {
         display: 'inline-block'
       },
       leftPad: {
-        padding: 0        
+        padding: 0
       },
       rightPad: {
         padding: '0 0 0 10px'
@@ -51,7 +67,7 @@ class SlopeInfo extends Component {
 
     return this.state.isInfoShown ? (
       <div>
-        <h3 style={styles.container}>Slope Info</h3>
+        <h3 style={styles.container} ref={this.info}>Slope Info</h3>
         <div style={styles.container}>
           <ul style={Object.assign(styles.list, styles.leftPad)}>
             <li>Slope ID:</li>
