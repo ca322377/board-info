@@ -1,4 +1,4 @@
-import { SLOPE_INFO, SHOW_LOADER } from './types'
+import { SLOPE_INFO } from './types'
 import { firestore } from '../config/firebase'
 import { showLoader } from './loadActions'
 
