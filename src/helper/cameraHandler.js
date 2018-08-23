@@ -10,7 +10,7 @@ export const init = (mVideo, mVideoSelect, mCallback) => {
     navigator.mediaDevices.enumerateDevices()
       .then(gotDevices)
       .then(getStream)
-      .catch(err => console.log(err))
+      .catch(e => console.log(e))
   }
 }
 
@@ -31,7 +31,7 @@ const getStream= () => {
   }).then(stream => {
     video.srcObject = stream
     instascan.init(video, videoSelect.value, callback)
-  }).catch(err => console.log(err))
+  }).catch(e => console.log(e))
 }
 
 export const handleSelect = () => {

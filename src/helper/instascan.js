@@ -20,11 +20,11 @@ export const init = (video, cameraId, callback) => {
     } else {
       return console.log('No cameras found')
     }
-  }).catch(err => console.log(err))
+  }).catch(e => console.log(e))
 }
 
 export const stop = () => {
   return new Promise((resolve, reject) => {
-    scanner.stop().then(() => resolve()).catch(err => reject(err))
+    scanner.stop().then(() => resolve()).catch(e => reject(e))
   })
 }
