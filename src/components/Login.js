@@ -16,7 +16,7 @@ export default class Login extends Component {
 
   render() {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
-    console.log('Login', from)
+    console.log('Login.js - willRedirect', this.props.willRedirect)
     if (this.props.willRedirect) return <Redirect to={from} />
 
     return (
