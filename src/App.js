@@ -15,7 +15,6 @@ class App extends Component {
 
   componentDidMount() {
     authListener = fireauth.onAuthStateChanged(user => {
-      console.log('authListener - user', user)
       if (user) {
         this.setState({
           isLogin: true,
@@ -36,8 +35,6 @@ class App extends Component {
 
   render() {
     const { isLoading, isLogin } = this.state
-    console.log('App.js render - isLogin', isLogin)
-    console.log('App.js render - isLoading', isLoading)
     if (isLoading) return null
 
     return (
@@ -46,7 +43,6 @@ class App extends Component {
           <div>
             <Route exact path='/login' render={(props) => (<Login willRedirect={isLogin} {...props} />)} />
             <PrivateRoute path='/' component={MainPage} isLogin={isLogin} />
-            <PrivateRoute path='/test' component={Test} isLogin={isLogin} />
           </div>
         </Router>
       </Provider>
@@ -54,16 +50,9 @@ class App extends Component {
   }
 }
 
-const Test = () => {
-  console.log('Test ')
-  return <h3>Test Page</h3>
-}
-
 const PrivateRoute = ({ component: Component, isLogin, ...rest }) => {
-  
   return (
     <Route exact {...rest} render={(props) => {
-      console.log('PrivateRoute - isLogin', isLogin)
       return (isLogin ?
         <Component {...props} /> :
         <Redirect to={{

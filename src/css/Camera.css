@@ -12,9 +12,10 @@
   z-index: -1;
 }
 
-.select {
+.camera-select {
   display: block;
-  margin: 0 auto;
+  margin: auto;
+  text-align: center;
 }
 
 .loader {

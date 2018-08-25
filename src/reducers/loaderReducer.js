@@ -1,7 +1,8 @@
-import { SHOW_LOADER } from '../actions/types'
+import { SHOW_LOADER, SHOW_ERROR } from '../actions/types'
 
 const initialState = {
-  loading: false
+  loading: false,
+  isError: false
 }
 
 export default (state = initialState, action) => {
@@ -10,6 +11,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loading: action.payload
+      }
+    case SHOW_ERROR:
+      return {
+        ...state,
+        isError: action.payload
       }
     default:
       return state

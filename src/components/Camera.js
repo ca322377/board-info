@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import * as cameraHandler from '../helper/cameraHandler'
 import { connect } from 'react-redux'
 import { getDoc } from '../actions/queryActions'
-import { showLoader } from '../actions/loadActions'
+import { DropdownButton, MenuItem } from 'react-bootstrap'
 import '../css/Camera.css'
 
 const Div = (props) => {
@@ -14,36 +14,50 @@ const Div = (props) => {
 class Camera extends Component {
   constructor(props) {
     super(props)
+    this.state = { isLoadingCamera: true }
     this.video = React.createRef()
-    this.videoSelect = React.createRef()
+    this.handleCameraSelect = this.handleCameraSelect.bind(this)
   }
 
   componentDidMount() {
     cameraHandler.init(
       this.video.current,
-      this.videoSelect.current,
       this.handleQrContent.bind(this)
-    )
+    ).then(() => this.setState({ isLoadingCamera: false }))
   }
 
   handleQrContent(content) {
     this.props.getDoc(content)
   }
 
+  handleCameraSelect(e) {
+    this.setState({ isLoadingCamera: true })
+    cameraHandler.handleSelect(e)
+      .then(() => this.setState({ isLoadingCamera: false }))
+  }
+
   render() {
+    const cameras = cameraHandler.getCameras()
+
     return (
       <div>
         <div className='container'>
-          <Div loading={this.props.loading} class='cover'/>
-          <Div loading={this.props.loading} class='loader'/>
+          <Div loading={this.props.loading} class='cover' />
+          <Div loading={this.props.loading} class='loader' />
           <video className='video' autoPlay ref={this.video}></video>
         </div>
 
         <br />
-        <div>
-          <select className='select' ref={this.videoSelect}
-            onChange={() => cameraHandler.handleSelect()}>
-          </select>
+        <div className='camera-select'>
+          <DropdownButton
+            bsStyle='primary'
+            title='Select camera'
+            key='0'
+            id='dropdown-basic-0'
+            onSelect={e => this.handleCameraSelect(e)}
+          >
+            {cameras.map((obj, index) => <MenuItem key={index} eventKey={index} active={obj.isActive}>{obj.label}</MenuItem>)}
+          </DropdownButton>
         </div>
       </div>
     )
@@ -52,11 +66,11 @@ class Camera extends Component {
 
 Camera.propTypes = {
   getDoc: PropTypes.func.isRequired,
-  showLoader: PropTypes.func.isRequired
+  loading: PropTypes.bool.isRequired
 }
 
 const mapStateToProps = state => ({
   loading: state.loader.loading
 })
 
-export default connect(mapStateToProps, { getDoc, showLoader })(Camera)
+export default connect(mapStateToProps, { getDoc })(Camera)

@@ -26,7 +26,7 @@ class SlopeInfo extends Component {
         block: 'start',
         inline: 'nearest'
       })
-    }, 500)
+    }, 1000)
   }
 
   formatDate = (date) => {

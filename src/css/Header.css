@@ -1,0 +1,17 @@
+.header-text {
+  display: inline-block;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+  padding: 18px;
+}
+
+.header-select {
+  position: absolute;
+  display: inline-block;
+  margin: auto;
+  text-align: right;
+  padding: 10px;
+  top: 0px;
+  right: 0px;
+}
